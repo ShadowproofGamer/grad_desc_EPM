@@ -3,24 +3,55 @@ import numpy as np
 
 def gradient_descent(
 
-    gradient, start, learn_rate, n_iter=50, tolerance=1e-03, r=1, r_iter=1
+    gradient, start, learn_rate, n_iter=50, tolerance=1e-03
 
 ):
-
-    vector = start
+    i=0
+    vector = np.array(start)
 
     for _ in range(n_iter):
 
-        diff = -learn_rate * gradient(*vector)
+        diff = -learn_rate * np.array(gradient(vector))
+        #print(diff)
+        stop = ((diff[0])**2+(diff[1])**2)**(1/2)
+        print("iteracja: {}, warunek stop: {}<{}, result: {}, stop:{}, diff:{}".format(i, np.abs(diff), tolerance, vector, stop, np.array(gradient(vector))))
+        if stop <= tolerance:
 
+            break
+
+        vector += diff
+        
+        i+=1
+    return vector
+
+
+
+
+
+
+
+
+def gradient_descent_var(
+
+    gradient, start, learn_rate, n_iter=50, tolerance=1e-03
+
+):
+    i=0
+    vector = np.array(start)
+
+    for _ in range(n_iter):
+
+        diff = -learn_rate * np.array(gradient(vector))
+        print("iteracja: {}, warunek stop: {}<{}, result: {}".format(i, np.abs(diff), tolerance, vector))
         if np.all(np.abs(diff) <= tolerance):
 
             break
 
         vector += diff
-        r*=r_iter
-
+        
+        i+=1
     return vector
+
 
 def gradient_descent_2d(
 
@@ -49,6 +80,13 @@ def gradient_descent_2d(
     return x, y
 
 
+
+#lista4
+#zad3
+gradient_descent(lambda vec: [2*(vec[0]), 2*(vec[1])], [4.0, 4.0], 0.3, 500, 0.01)
+
+
+#lista 5
 #zad2 gradient
 #grad2=lambda x1, x2: [x2*(x2-1)*(2*x2-1)+4*r*(x1**2 -2*x1+x2**2)*(x1-1), x2*(x2-1)*(2*x2-1)+4*r*(x1**2 -2*x1+x2**2)*(x2)]
 def grad2(x1, x2, r=0.05):
@@ -64,6 +102,12 @@ def orig_func2(vector):
 orig_func2(gradient_descent_2d(grad2, (2, 2), 0.1, 5000, 0.0001, 1.05, 0.1))
 
 
+
+
+
+
+
+#zad3
 def grad3(x1, x2, r=0.05, r_iter=1):
     r*=r_iter
     if((x1**2 -2*x1 + x2**2)>0):
